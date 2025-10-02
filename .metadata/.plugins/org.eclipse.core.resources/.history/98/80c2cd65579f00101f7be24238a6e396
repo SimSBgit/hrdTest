@@ -13,13 +13,13 @@ public class CRUDClass {
 
 	public CRUDClass() {
 
-		Ex1();  // 테이블 3개 생성
+//		Ex1();  // 테이블 3개 생성
 
 //		Ex2(SQLs.INSERT_GOLF_TABLE);  // 각 테이블에 데이터 삽입
 //		Ex2(SQLs.INSERT_LESSON_TABLE);
 //		Ex2(SQLs.INSERT_USAGE_TABLE);
 
-		Ex2(SQLs.INSERT_TABLES);
+//		Ex2(SQLs.INSERT_TABLES);
 
 		Ex3_1(SQLs.SELECT_BY_GRADE, "A"); // A등급 회원의 이름, 전화번호, 가입일자 조회
 
@@ -29,7 +29,7 @@ public class CRUDClass {
 
 		Ex4(SQLs.UPDATE_GRADE, "이순신", "A", 2); // 이순신 회원의 등급을 A로 수정
 
-//		Ex5(SQLs.DELETE_MEMBER, 3); // MNO = 3인 회원을 삭제
+		Ex5(SQLs.DELETE_MEMBER, 3); // MNO = 3인 회원을 삭제
 
 		Ex6(SQLs.SELECT_MEMBER_STATISTICS_BY_GRADE); // 확장문제: 등급별 통계 - (등급, 회원수, 평균 강습비, 총 이용요금 조회)
 	}
@@ -264,12 +264,12 @@ public class CRUDClass {
 		}
 	}
 
-	private void Ex6(String sql, Object... params) {
+	private void Ex6(String sql) {
 
 		try (Connection conn = DBConnection.getConnection(); 
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			setParams(pstmt, params);
+			setParams(pstmt);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
@@ -286,14 +286,11 @@ public class CRUDClass {
 		} catch (SQLException se) {
 			se.printStackTrace();
 			System.out.println("회원등급별 통계 조회 실패");
-			
-			// 아래 두 줄은 실무 적용 예시
+//			아래는 실무 적용 예제
 //			throw new RuntimeException("회원등급별 통계 조회 실패", se);
 //			throw new DataAccessException("회원등급별 통계 조회 실패", se);
 		}
 
-		// 아래 기초 코드를 좀 더 실무에 쓸만한 코드로 발전시키기.
-		
 //		try {
 //			conn = DBConnection.getConnection();
 //			pstmt = conn.prepareStatement(sql);

@@ -12,40 +12,40 @@ import com.test.sql.SQLs;
 public class CRUDClass {
 
 	public CRUDClass() {
-
-		Ex1();  // 테이블 3개 생성
-
+		
+//		Ex1();  // 테이블 3개 생성
+		
 //		Ex2(SQLs.INSERT_GOLF_TABLE);  // 각 테이블에 데이터 삽입
 //		Ex2(SQLs.INSERT_LESSON_TABLE);
 //		Ex2(SQLs.INSERT_USAGE_TABLE);
-
-		Ex2(SQLs.INSERT_TABLES);
-
-		Ex3_1(SQLs.SELECT_BY_GRADE, "A"); // A등급 회원의 이름, 전화번호, 가입일자 조회
-
-		Ex3_2(SQLs.SELECT_BY_FEE, 250000); // 강습비가 250000 이상인 강습 내역 조회
-
-		Ex3_3(SQLs.SELECT_TOTALCOST); // 회원별 총 이용요금 집계(출력: 회원명, 총 요금)
-
-		Ex4(SQLs.UPDATE_GRADE, "이순신", "A", 2); // 이순신 회원의 등급을 A로 수정
-
-//		Ex5(SQLs.DELETE_MEMBER, 3); // MNO = 3인 회원을 삭제
-
-		Ex6(SQLs.SELECT_MEMBER_STATISTICS_BY_GRADE); // 확장문제: 등급별 통계 - (등급, 회원수, 평균 강습비, 총 이용요금 조회)
+		
+//		Ex2(SQLs.INSERT_TABLES);
+		
+		Ex3_1(SQLs.SELECT_BY_GRADE, "A");	// A등급 회원의 이름, 전화번호, 가입일자 조회
+		
+		Ex3_2(SQLs.SELECT_BY_FEE ,250000);	// 강습비가 250000 이상인 강습 내역 조회
+		
+		Ex3_3(SQLs.SELECT_TOTALCOST);	// 회원별 총 이용요금 집계(출력: 회원명, 총 요금)
+		
+		Ex4(SQLs.UPDATE_GRADE ,"이순신", "A", 2);	// 이순신 회원의 등급을 A로 수정
+		
+		Ex5(SQLs.DELETE_MEMBER ,3);	// MNO = 3인 회원을 삭제
+		
+		Ex6(SQLs.SELECT_MEMBER_STATISTICS_BY_GRADE);	// 확장문제: 등급별 통계 - (등급, 회원수, 평균 강습비, 총 이용요금 조회)
 	}
-
+	
 	private void Ex1() {
 		Connection conn = null;
 		Statement stmt = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
-
-			for (String sql : SQLs.CREATE_TABLES) {
+			
+			for(String sql : SQLs.CREATE_TABLES ) {
 				stmt.execute(sql);
 			}
-
+			
 			System.out.println("테이블 생성 성공");
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -58,18 +58,18 @@ public class CRUDClass {
 	}
 
 	private void Ex2(String tableName) {
-
+		
 		Connection conn = null;
 		Statement stmt = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
-
-			for (String sql : SQLs.INSERT_TABLES) {
+			
+			for(String sql : SQLs.INSERT_TABLES ) {
 				stmt.execute(sql);
 			}
-
+			
 			System.out.println(tableName + "에 인서트 완료");
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -80,20 +80,20 @@ public class CRUDClass {
 			System.out.println();
 		}
 	}
-
-	private void Ex2(String[] tableName) {
-
+	
+private void Ex2(String[] tableName) {
+		
 		Connection conn = null;
 		Statement stmt = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
-
-			for (String sql : SQLs.INSERT_TABLES) {
+			
+			for(String sql : SQLs.INSERT_TABLES ) {
 				stmt.execute(sql);
 			}
-
+			
 			System.out.println(tableName + "에 인서트 완료");
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -104,79 +104,81 @@ public class CRUDClass {
 			System.out.println();
 		}
 	}
-
-	private void Ex3_1(String sql, String grade) {
-
+	
+	private void Ex3_1(String sql,String grade) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, grade);
 			rs = pstmt.executeQuery();
-
-			System.out.println(grade + "등급 회원 조회");
-			while (rs.next()) {
+			
+			System.out.println(grade +"등급 회원 조회");
+			while(rs.next()) {
 				String aName = rs.getString("MName");
 				String phone = rs.getString("Phone");
 				Date joinDate = rs.getDate("JoinDate");
-				System.out.println(" - 회원성명: " + aName + ", 연락처: " + phone + ", 가입일자: " + joinDate);
+				System.out.println(" - 회원성명: " + aName + ", 연락처: " 
+				+ phone + ", 가입일자: " + joinDate);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-			System.out.println(grade + "등급 회원 조회 실패");
+			System.out.println(grade +"등급 회원 조회 실패");
 		} finally {
 			DBConnection.close(rs, pstmt, conn);
-			System.out.println(grade + "등급 회원 조회 완료");
+			System.out.println(grade +"등급 회원 조회 완료");
 			System.out.println();
 		}
 	}
-
-	private void Ex3_2(String sql, int fee) {
-
+	
+	private void Ex3_2(String sql ,int fee) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, fee);
 			rs = pstmt.executeQuery();
-
+			
 			System.out.println("강습비가 " + fee + " 이상인 강습 내역 조회");
-			while (rs.next()) {
+			while(rs.next()) {
 				int lessonNum = rs.getInt("LNo");
 				System.out.println(" - 강습번호: " + lessonNum);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-			System.out.println("강습비가 " + fee + " 이상인 강습 내역 조회 실패");
+			System.out.println("강습비가 "+ fee +" 이상인 강습 내역 조회 실패");
 		} finally {
 			DBConnection.close(rs, pstmt, conn);
-			System.out.println("강습비가 " + fee + " 이상인 강습 내역 조회 완료");
+			System.out.println("강습비가 "+ fee +" 이상인 강습 내역 조회 완료");
 			System.out.println();
 		}
 	}
-
+	
 	private void Ex3_3(String sql) {
-
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-
+			
 			System.out.println("회원별 총 이용요금");
-			while (rs.next()) {
+			while(rs.next()) {
 				String name = rs.getString("g.MName");
 				int total = rs.getInt("총 이용요금");
-				System.out.println(" - 회원성명: " + name + ", 총 이용요금: " + total);
+				System.out.println(" - 회원성명: " + name + ", 총 이용요금: " 
+				+ total);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -187,24 +189,24 @@ public class CRUDClass {
 			System.out.println();
 		}
 	}
-
-	private void Ex4(String sql, String name, String grade, int memberNum) {
-
+	
+	private void Ex4(String sql,String name, String grade, int memberNum) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-
+			
 			pstmt.setString(1, grade);
 			pstmt.setString(2, name);
 			pstmt.setInt(3, memberNum);
 			// 실무적인 처리 방법
-//			setParams(pstmt, name, grade, memberNum);
-
+			setParams(pstmt);
+			
 			int rows = pstmt.executeUpdate();
-
+			
 			System.out.println(name + " 회원의 등급을 " + grade + "로 수정");
 			if (rows > 0) {
 				System.out.println(" --- " + rows + "행 수정 완료");
@@ -220,34 +222,28 @@ public class CRUDClass {
 			System.out.println();
 		}
 	}
-
+	
 	// 지금 사용하진 않지만 실무에서 사용할만한 메서드
 	private void setParams(PreparedStatement pstmt, Object... params) throws SQLException {
-		if (params == null)
-			return;
-		for (int i = 0; i < params.length; i++) {
-			if (params[i] == null) {
-				pstmt.setNull(i + 1, java.sql.Types.NULL);
-			} else {
-				pstmt.setObject(i + 1, params[i]);
-			}
+		for(int i=0; i<params.length; i++) {
+			pstmt.setObject(i + 1, params[i]);
 		}
 	}
 
 	private void Ex5(String sql, int memberNum) {
-
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-
+			
 			pstmt.setInt(1, memberNum);
-
+			
 			int rows = pstmt.executeUpdate();
-
+			
 			System.out.println("MNO = 3인 회원 삭제");
 			if (rows > 0) {
 				System.out.println(" --- " + rows + "행 삭제 완료");
@@ -256,68 +252,44 @@ public class CRUDClass {
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-			System.out.println("MNO = " + memberNum + "인 회원 삭제 실패");
+			System.out.println("MNO = "+ memberNum +"인 회원 삭제 실패");
 		} finally {
 			DBConnection.close(rs, pstmt, conn);
-			System.out.println("MNO = " + memberNum + "인 회원 삭제 완료");
+			System.out.println("MNO = "+ memberNum +"인 회원 삭제 완료");
 			System.out.println();
 		}
 	}
-
-	private void Ex6(String sql, Object... params) {
-
-		try (Connection conn = DBConnection.getConnection(); 
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-			setParams(pstmt, params);
-
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-					String grade = rs.getString("회원등급");
-					int num = rs.getInt("회원수");
-					int avgFee = rs.getInt("평균 강습비");
-					int totalCost = rs.getInt("총 이용요금");
-					System.out.println(
-					" - 회원등급: " + grade + ", 회원수: " + num 
-					+ ", 평균 강습비: " + avgFee + ", 총 이용요금: " + totalCost);
-				}
-				System.out.println("회원등급별 통계 조회 완료");
+	
+	private void Ex6(String sql) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			System.out.println("회원등급별 통계");
+			while(rs.next()) {
+				String grade = rs.getString("회원등급");
+				int num = rs.getInt("회원수");
+				int avgFee = rs.getInt("평균 강습비");
+				int totalCost = rs.getInt("총 이용요금");
+				System.out.println(" - 회원등급: " + grade + ", 회원수: " 
+				+ num + ", 평균 강습비: " + avgFee + ", 총 이용요금: "+ totalCost);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
 			System.out.println("회원등급별 통계 조회 실패");
-			
-			// 아래 두 줄은 실무 적용 예시
+//			아래는 실무 적용 예제
 //			throw new RuntimeException("회원등급별 통계 조회 실패", se);
 //			throw new DataAccessException("회원등급별 통계 조회 실패", se);
+		} finally {
+			DBConnection.close(rs, pstmt, conn);
+			System.out.println("회원등급별 통계 조회 완료");
+			System.out.println();
 		}
-
-		// 아래 기초 코드를 좀 더 실무에 쓸만한 코드로 발전시키기.
-		
-//		try {
-//			conn = DBConnection.getConnection();
-//			pstmt = conn.prepareStatement(sql);
-//			rs = pstmt.executeQuery();
-//
-//			System.out.println("회원등급별 통계");
-//			while (rs.next()) {
-//				String grade = rs.getString("회원등급");
-//				int num = rs.getInt("회원수");
-//				int avgFee = rs.getInt("평균 강습비");
-//				int totalCost = rs.getInt("총 이용요금");
-//				System.out.println(
-//						" - 회원등급: " + grade + ", 회원수: " + num + ", 평균 강습비: " + avgFee + ", 총 이용요금: " + totalCost);
-//			}
-//		} catch (SQLException se) {
-//			se.printStackTrace();
-//			System.out.println("회원등급별 통계 조회 실패");
-////			아래는 실무 적용 예제
-////			throw new RuntimeException("회원등급별 통계 조회 실패", se);
-////			throw new DataAccessException("회원등급별 통계 조회 실패", se);
-//		} finally {
-//			DBConnection.close(rs, pstmt, conn);
-//			System.out.println("회원등급별 통계 조회 완료");
-//			System.out.println();
-//		}
 	}
 }

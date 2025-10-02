@@ -24,8 +24,8 @@ CREATE TABLE album(
 	CONSTRAINT CH_ CHECK (Sales >= 0)
 );
 
-DROP TABLE if exists album;
-DROP TABLE if exists artist;
+DROP TABLE album;
+DROP TABLE artist;
 
 
 DESC artist;
