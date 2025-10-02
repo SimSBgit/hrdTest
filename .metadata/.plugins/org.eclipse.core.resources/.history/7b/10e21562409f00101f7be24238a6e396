@@ -1,0 +1,174 @@
+package com.test.sql;
+
+public class SQLs {
+
+//	---- SQL 개별 상수 필드
+
+	// -- Create
+
+	public static final String CREATE_GOLF_TABLE = """
+						create table golfMember (
+				MNo int AUTO_INCREMENT,
+				MName VARCHAR(30) NOT NULL,
+				Phone VARCHAR(13),
+				JoinDate DATE NOT NULL,
+				Grade CHAR(1),
+				CONSTRAINT Pk_MNo PRIMARY KEY (MNo),
+				CONSTRAINT U_Phone UNIQUE (Phone),
+				CONSTRAINT Ch_Grade CHECK (Grade IN ('A', 'B', 'C'))
+			)
+						""";
+
+	public static final String CREATE_LESSON_TABLE = """
+						CREATE TABLE lesson (
+				LNo INT AUTO_INCREMENT,
+				MNo INT,
+				Coach VARCHAR(30) NOT NULL,
+				StartDate DATE NOT NULL,
+				Fee INT,
+				CONSTRAINT Pk_LNo PRIMARY KEY (LNo),
+				CONSTRAINT Fk_MNo FOREIGN KEY (MNo) REFERENCES golfMember(MNo) ON DELETE CASCADE,
+				CONSTRAINT Ch_Fee CHECK (Fee >= 0)
+			)
+						""";
+
+	public static final String CREATE_USAGES_TABLE = """
+						CREATE TABLE usages (
+				UNo INT AUTO_INCREMENT,
+				MNo INT,
+				UDate DATE NOT NULL,
+				UsageTime INT,
+				Cost INT,
+				CONSTRAINT Pk_UNo PRIMARY KEY (UNo),
+				CONSTRAINT Fk_MNo2 FOREIGN KEY (MNo) REFERENCES golfMember(MNo) ON DELETE CASCADE,
+				CONSTRAINT Ch_UsageTime CHECK (UsageTime > 0),
+				CONSTRAINT Ch_Cost CHECK (Cost >= 0)
+			)
+						""";
+
+	// Insert
+
+	public static final String INSERT_GOLF_TABLE = """
+						INSERT INTO golfMember (MName, Phone, JoinDate, Grade)
+			VALUES
+			('홍길동', '010-1111-2222', '2020-01-01', 'A'),
+			('이순신', '010-3333-4444', '2021-05-10', 'B'),
+			('강감찬', '010-5555-6666', '2022-03-15', 'C')
+						""";
+
+	public static final String INSERT_LESSON_TABLE = """
+						INSERT INTO lesson (MNo, Coach, StartDate, Fee)
+			VALUES
+			(1, '김프로', '2020-02-01', 300000),
+			(2, '박프로', '2021-06-01', 250000),
+			(3, '이프로', '2022-04-01', 200000)
+						""";
+
+	public static final String INSERT_USAGE_TABLE = """
+						INSERT INTO usages (MNo, UDate, UsageTime, Cost)
+			VALUES
+			(1, '2020-02-10', 120, 24000),
+			(2, '2021-06-15', 90, 18000),
+			(3, '2022-04-20', 150, 30000)
+						""";
+
+	// Select
+
+	public static final String SELECT_BY_GRADE = """
+			SELECT MName, Phone, JoinDate FROM golfMember WHERE Grade = ?
+			""";
+
+	public static final String SELECT_BY_FEE = """
+			SELECT LNo FROM lesson WHERE Fee >= ?
+			""";
+
+	public static final String SELECT_BY_TOTALCOST = """
+			SELECT g.MName, COALESCE(SUM(u.Cost), 0) `총 이용요금`
+			FROM golfMember g LEFT JOIN usages u ON g.MNo=u.MNo
+			GROUP BY g.MNo, g.MName
+						""";
+	public static final String sql = """
+			UPDATE golfMember SET grade = ? WHERE MName = ? AND MNo = ?
+			""";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	---- SQL 배열 필드
+
+	// Create
+
+	public static final String[] CREATE_TABLES = { """
+									create table golfMember (
+				MNo int AUTO_INCREMENT,
+				MName VARCHAR(30) NOT NULL,
+				Phone VARCHAR(13),
+				JoinDate DATE NOT NULL,
+				Grade CHAR(1),
+				CONSTRAINT Pk_MNo PRIMARY KEY (MNo),
+				CONSTRAINT U_Phone UNIQUE (Phone),
+				CONSTRAINT Ch_Grade CHECK (Grade IN ('A', 'B', 'C'))
+			)
+						""", """
+									CREATE TABLE lesson (
+				LNo INT AUTO_INCREMENT,
+				MNo INT,
+				Coach VARCHAR(30) NOT NULL,
+				StartDate DATE NOT NULL,
+				Fee INT,
+				CONSTRAINT Pk_LNo PRIMARY KEY (LNo),
+				CONSTRAINT Fk_MNo FOREIGN KEY (MNo) REFERENCES golfMember(MNo) ON DELETE CASCADE,
+				CONSTRAINT Ch_Fee CHECK (Fee >= 0)
+			)
+									""", """
+									CREATE TABLE usages (
+				UNo INT AUTO_INCREMENT,
+				MNo INT,
+				UDate DATE NOT NULL,
+				UsageTime INT,
+				Cost INT,
+				CONSTRAINT Pk_UNo PRIMARY KEY (UNo),
+				CONSTRAINT Fk_MNo2 FOREIGN KEY (MNo) REFERENCES golfMember(MNo) ON DELETE CASCADE,
+				CONSTRAINT Ch_UsageTime CHECK (UsageTime > 0),
+				CONSTRAINT Ch_Cost CHECK (Cost >= 0)
+			)
+												""" };
+
+	// Insert
+
+	public static final String[] INSERT_TABLES = { """
+						INSERT INTO golfMember (MName, Phone, JoinDate, Grade)
+			VALUES
+			('홍길동', '010-1111-2222', '2020-01-01', 'A'),
+			('이순신', '010-3333-4444', '2021-05-10', 'B'),
+			('강감찬', '010-5555-6666', '2022-03-15', 'C')
+						""", """
+						INSERT INTO lesson (MNo, Coach, StartDate, Fee)
+			VALUES
+			(1, '김프로', '2020-02-01', 300000),
+			(2, '박프로', '2021-06-01', 250000),
+			(3, '이프로', '2022-04-01', 200000)
+						""", """
+						INSERT INTO usages (MNo, UDate, UsageTime, Cost)
+			VALUES
+			(1, '2020-02-10', 120, 24000),
+			(2, '2021-06-15', 90, 18000),
+			(3, '2022-04-20', 150, 30000)
+						""" };
+
+}

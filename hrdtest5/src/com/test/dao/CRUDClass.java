@@ -11,28 +11,27 @@ import com.test.sql.SQLs;
 
 public class CRUDClass {
 
-
 	public CRUDClass() {
 		
-		Ex1();  // 테이블 3개 생성
+//		Ex1();  // 테이블 3개 생성
 		
-//		Ex2("golfMember");  // 각 테이블에 데이터 삽입
-//		Ex2("lesson");
-//		Ex2("usages");
+//		Ex2(SQLs.INSERT_GOLF_TABLE);  // 각 테이블에 데이터 삽입
+//		Ex2(SQLs.INSERT_LESSON_TABLE);
+//		Ex2(SQLs.INSERT_USAGE_TABLE);
 		
-		Ex2("INSERT_TABLES");
+//		Ex2(SQLs.INSERT_TABLES);
 		
-		Ex3_1("A");	// A등급 회원의 이름, 전화번호, 가입일자 조회
+		Ex3_1(SQLs.SELECT_BY_GRADE, "A");	// A등급 회원의 이름, 전화번호, 가입일자 조회
 		
-		Ex3_2(250000);	// 강습비가 250000 이상인 강습 내역 조회
+		Ex3_2(SQLs.SELECT_BY_FEE ,250000);	// 강습비가 250000 이상인 강습 내역 조회
 		
-		Ex3_3();	// 회원별 총 이용요금 집계(출력: 회원명, 총 요금)
+		Ex3_3(SQLs.SELECT_TOTALCOST);	// 회원별 총 이용요금 집계(출력: 회원명, 총 요금)
 		
-		Ex4("이순신", "A", 2);	// 이순신 회원의 등급을 A로 수정
+		Ex4(SQLs.UPDATE_GRADE ,"이순신", "A", 2);	// 이순신 회원의 등급을 A로 수정
 		
-//		Ex5(3);	// MNO = 3인 회원을 삭제
+		Ex5(SQLs.DELETE_MEMBER ,3);	// MNO = 3인 회원을 삭제
 		
-		Ex6();	// 확장문제: 등급별 통계 - (등급, 회원수, 평균 강습비, 총 이용요금 조회)
+		Ex6(SQLs.SELECT_MEMBER_STATISTICS_BY_GRADE);	// 확장문제: 등급별 통계 - (등급, 회원수, 평균 강습비, 총 이용요금 조회)
 	}
 	
 	private void Ex1() {
@@ -82,8 +81,32 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex3_1(String grade) {
-		String sql = "SELECT MName, Phone, JoinDate FROM golfMember WHERE Grade = ?";
+private void Ex2(String[] tableName) {
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			stmt = conn.createStatement();
+			
+			for(String sql : SQLs.INSERT_TABLES ) {
+				stmt.execute(sql);
+			}
+			
+			System.out.println(tableName + "에 인서트 완료");
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println(tableName + "에 인서트 실패");
+		} finally {
+			DBConnection.close(stmt, conn);
+			System.out.println("인서트 종료");
+			System.out.println();
+		}
+	}
+	
+	private void Ex3_1(String sql,String grade) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -112,8 +135,8 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex3_2(int fee) {
-		String sql = "SELECT LNo FROM lesson WHERE Fee >= ?";
+	private void Ex3_2(String sql ,int fee) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -139,10 +162,8 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex3_3() {
-		String sql = "SELECT g.MName, COALESCE(SUM(u.Cost), 0) `총 이용요금` \r\n"
-				+ "FROM golfMember g LEFT JOIN usages u ON g.MNo=u.MNo\r\n"
-				+ "GROUP BY g.MNo, g.MName";
+	private void Ex3_3(String sql) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -169,8 +190,8 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex4(String name, String grade, int memberNum) {
-		String sql = "UPDATE golfMember SET grade = ? WHERE MName = ? AND MNo = ?";
+	private void Ex4(String sql,String name, String grade, int memberNum) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
@@ -200,8 +221,8 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex5(int memberNum) {
-		String sql = "DELETE FROM golfMember WHERE MNo = ?";
+	private void Ex5(String sql, int memberNum) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -230,15 +251,8 @@ public class CRUDClass {
 		}
 	}
 	
-	private void Ex6() {
-		String sql = "SELECT g.Grade `회원등급`, \r\n"
-				+ "	COUNT(g.MNo) `회원수`, \r\n"
-				+ "	AVG(l.Fee) `평균 강습비`,\r\n"
-				+ "	SUM(u.TotalCost) `총 이용요금`\r\n"
-				+ "FROM golfMember g \r\n"
-				+ "LEFT JOIN (SELECT MNo, AVG(Fee) AS Fee FROM lesson GROUP BY MNo)l ON g.MNo=l.MNo\r\n"
-				+ "LEFT JOIN (SELECT MNo, SUM(Cost) AS TotalCost FROM usages GROUP BY MNo)u ON g.MNo=u.MNo\r\n"
-				+ "GROUP BY g.Grade";
+	private void Ex6(String sql) {
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -72,6 +72,40 @@ public class SQLs {
 			(3, '2022-04-20', 150, 30000)
 						""";
 
+	// Select
+
+	public static final String SELECT_BY_GRADE = """
+			SELECT MName, Phone, JoinDate FROM golfMember WHERE Grade = ?
+			""";
+
+	public static final String SELECT_BY_FEE = """
+			SELECT LNo FROM lesson WHERE Fee >= ?
+			""";
+
+	public static final String SELECT_TOTALCOST = """
+			SELECT g.MName, COALESCE(SUM(u.Cost), 0) `총 이용요금`
+			FROM golfMember g LEFT JOIN usages u ON g.MNo=u.MNo
+			GROUP BY g.MNo, g.MName
+						""";
+	public static final String UPDATE_GRADE = """
+			UPDATE golfMember SET grade = ? WHERE MName = ? AND MNo = ?
+			""";
+
+	public static final String DELETE_MEMBER = """
+			DELETE FROM golfMember WHERE MNo = ?
+			""";
+
+	public static final String SELECT_MEMBER_STATISTICS_BY_GRADE = """
+			SELECT g.Grade `회원등급`,
+				COUNT(g.MNo) `회원수`,
+				AVG(l.Fee) `평균 강습비`,
+				SUM(u.TotalCost) `총 이용요금`
+			FROM golfMember g
+			LEFT JOIN (SELECT MNo, AVG(Fee) AS Fee FROM lesson GROUP BY MNo)l ON g.MNo=l.MNo
+			LEFT JOIN (SELECT MNo, SUM(Cost) AS TotalCost FROM usages GROUP BY MNo)u ON g.MNo=u.MNo
+			GROUP BY g.Grade
+						""";
+
 //	---- SQL 배열 필드
 
 	// Create
@@ -133,44 +167,5 @@ public class SQLs {
 			(2, '2021-06-15', 90, 18000),
 			(3, '2022-04-20', 150, 30000)
 						""" };
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

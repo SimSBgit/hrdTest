@@ -41,9 +41,9 @@ DESC golfMember;
 DESC lesson;
 DESC usages;
 
-DROP table lesson;
-DROP table usages;
-DROP table golfMember;
+DROP table if exists lesson;
+DROP table if exists usages;
+DROP table if exists golfMember;
 
 -- 2. 각 테이블에 데이터 삽입
 INSERT INTO golfMember (MName, Phone, JoinDate, Grade)
