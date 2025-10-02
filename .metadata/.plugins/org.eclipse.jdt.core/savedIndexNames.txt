@@ -1,0 +1,13 @@
+INDEX VERSION 1.134+E:\dev\java\hrdTest\.metadata\.plugins\org.eclipse.jdt.core
+2768850684.index
+502724944.index
+3202108855.index
+2506926834.index
+1865797976.index
+1505480833.index
+1525857594.index
+3524165226.index
+1282075593.index
+3580082803.index
+997055327.index
+2519058249.index

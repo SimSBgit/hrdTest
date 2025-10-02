@@ -1,0 +1,166 @@
+package com.hrd.crud;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.hrd.conn.DBConnection;
+
+public class CRUDClass {
+
+	public CRUDClass() {
+
+		Ex1(2020);
+		
+//		deleteTable("1");
+//		deleteTable("2");
+		
+		
+		
+//		updateTable("users", "홍철수", "1");
+//		
+//		selectTable("users");
+		
+//		dropTable("users");
+		
+		
+	}
+
+	
+	private void Ex1(int year) {
+		String sql = "SELECT BookTitle as `2020년부터 출판된 도서` FROM bookTable WHERE YEAR(PublishYear) >= ?;";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, year);
+			
+			rs = pstmt.executeQuery();
+			
+			System.out.println(year + "년부터 출판된 도서 목록");
+			while(rs.next()) {
+				String title = rs.getString("도서들");
+				System.out.println(" - " + title);
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println(year + "년부터 출판된 도서 조회 실패");
+		} finally {
+			DBConnection.close(pstmt, conn);
+			System.out.println(year + "년부터 출판된 도서 조회 종료");
+			System.out.println();
+		}
+	}
+	
+	private void deleteTable(String id) {
+		String sql = "";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			int rows = pstmt.executeUpdate();
+			
+			System.out.println("--- "+ rows + "행이 삭제 됨.");
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println("테이블 레코드 삭제 실패");
+		} finally {
+			DBConnection.close(pstmt, conn);
+			System.out.println("딜리트문 종료");
+			System.out.println();
+		}
+	}
+	
+	private void selectTable(String tableName) {
+		
+		String sql = "select * from " + tableName;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if(!rs.next()) {
+				System.out.println(tableName + " 테이블에 조회된 결과 없음");
+			} else {
+				int rowCount = 0;
+				do {
+					rowCount++;
+					String id = rs.getString("id");
+					String name = rs.getString("name");
+					System.out.println("ID: " +id+ ", NAME: " +name);
+				} while(rs.next());
+				
+					System.out.println("~~ 테이블에 " + rowCount + "행이 있음." );
+			}
+			System.out.println(tableName + " 테이블 조회 성공");
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println(tableName + " 테이블 조회 실패");
+		} finally {
+			DBConnection.close(rs, pstmt, conn);
+			System.out.println("셀렉트문 종료");
+			System.out.println();
+		}
+		
+	}
+
+	private void updateTable(String tableName, String name, String id) {
+		System.out.println(tableName + " 테이블 " + id 
+				+ "번 행의 " + name + "을/를");
+		String sql = "update " + tableName + " set name = ? where id = ?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setString(2, id);
+			int rows = pstmt.executeUpdate();
+			
+			System.out.println(tableName + " 테이블 " + id 
+					+ "번 행의 " + name + "(으)로 변경 완료");
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println(tableName + " 테이블 레코드 수정 실패");
+		} finally {
+			DBConnection.close(pstmt, conn);
+			System.out.println("업데이트문 종료");
+			System.out.println();
+		}
+		
+	}
+
+	private void dropTable(String tableName) {
+		
+		String sql = "drop table if exists " + tableName;
+		Connection conn = null;
+		Statement stmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			stmt = conn.createStatement();
+			stmt.execute(sql);
+			
+			System.out.println(tableName + " 테이블 드랍 성공");
+		} catch (SQLException se) {
+			se.printStackTrace();
+			System.out.println(tableName + "테이블 드랍 실패");
+		}
+		DBConnection.close(stmt, conn);
+		System.out.println("드랍문 종료");
+		System.out.println();
+	}
+}

@@ -1,0 +1,5 @@
+package com.hrd.conn;
+
+public class DBConnection {
+
+}
